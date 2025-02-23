@@ -1,0 +1,11 @@
+uvicorn
+python-fasthtml
+pydantic
+SQLAlchemy
+psycopg2==2.9.3
+fastsql
+websockets==13.1
+pandas
+altair
+fh_altair
+MonsterUI
