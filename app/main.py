@@ -6,7 +6,7 @@ from datetime import datetime
 
 from app.database import  session
 from app.models import new_task, update_task, delete_task
-from app.lista import page_heading, tasks_ui, CreateTaskModal
+from app.lista import consultar_datos
 
 hdrs = (Theme.blue.headers())
 app, rt = fast_app(hdrs=hdrs)
@@ -33,7 +33,7 @@ class Delete_Task:
 
 @rt('/')
 def index():
-    return Container(page_heading, tasks_ui, CreateTaskModal())
+    return consultar_datos()
 
 @rt("/register")
 def post(ticket: New_Task):
@@ -45,7 +45,7 @@ def post(ticket: New_Task):
 def post(ticket: Update_Task):
     valores = ticket.__dict__
     valores.update(id=int(valores['id'].removeprefix('TK-')))
-    valores.update(step=list(valor_status.keys())[list(valor_status.values()).index(valores['step'])])
+    #valores.update(step=list(valor_status.keys())[list(valor_status.values()).index(valores['step'])])
     valores.update(fechamodificacion=datetime.now())
     update_task(valores)
     return Redirect(f"/")
