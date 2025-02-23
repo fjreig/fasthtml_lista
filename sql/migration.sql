@@ -1,18 +1,17 @@
--- create the table tickets
-CREATE TABLE IF NOT EXISTS public.tickets
+-- create the table tasks
+CREATE TABLE IF NOT EXISTS public.tasks
 (
     id serial,
 	fechacreacion timestamp,
  	fechamodificacion timestamp,
+    selected bool,
     titulo varchar,
-    descripcion varchar,
+    estado varchar,
     prioridad varchar,
-    step int,
-    departmento varchar,
     PRIMARY KEY (id)
 );
 
 -- Data
-INSERT INTO public.tickets (fechacreacion,fechamodificacion,titulo,descripcion,prioridad,step,departmento) VALUES
-	 ('2025-01-09 16:52:43','2025-01-09 16:52:43','Cloud Storage Access Error','Unable to access cloud storage with persistent authorization errors. Multiple users affected across marketing department','Alta',4,'IT Support'),
-	 ('2025-01-09 16:52:43','2025-01-09 16:52:43','Office Equipment Setup','Unable to access cloud storage with persistent authorization errors. Multiple users affected across marketing department','Media',2,'IT Support');
+INSERT INTO public.tasks (fechacreacion,fechamodificacion,selected,titulo,estado,prioridad) VALUES
+	 ('2025-01-09 16:52:43','2025-01-09 16:52:43',True,'Documentation','Backlog','Low'),
+	 ('2025-01-09 16:52:43','2025-01-09 16:52:43',True,'Bug','Todo','Medium');

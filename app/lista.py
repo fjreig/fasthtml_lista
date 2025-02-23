@@ -3,12 +3,22 @@ from monsterui.all import *
 from fasthtml.svg import *
 import json
 
+from app.models import (
+    get_all_tasks, 
+    get_count_priority_tasks, 
+    get_count_status_tasks,
+    get_count_rows
+)
+
 app, rt = fast_app(hdrs=Theme.blue.headers())
+
+num_row = get_count_rows()
+data = get_all_tasks()
+priority_dd = get_count_priority_tasks()
+status_dd = get_count_status_tasks()
 
 def LAlignedCheckTxt(txt): 
     return DivLAligned(UkIcon(icon='check'), P(txt, cls=TextPresets.muted_sm))
-
-with open('app/data/status_list.json', 'r') as f: data     = json.load(f)
 
 def _create_tbl_data(d):
     return {'Done': d['selected'], 'Task': d['id'], 'Title': d['title'], 
@@ -19,14 +29,10 @@ page_size = 15
 current_page = 0
 paginated_data = data[current_page*page_size:(current_page+1)*page_size]
 
-priority_dd = [{'priority': "low", 'count': 36 }, {'priority': "medium", 'count': 33 }, {'priority': "high", 'count': 31 }]
-
-status_dd = [{'status': "backlog", 'count': 21 },{'status': "todo", 'count': 21 },{'status': "progress", 'count': 20 },{'status': "done",'count': 19 },{'status': "cancelled", 'count': 19 }]
-
 def CreateTaskModal():
     return Modal(
         Div(cls='p-6')(
-            ModalTitle('Create Task'),
+            ModalTitle('Crear Nueva Tarea'),
             P('Fill out the information below to create a new task', cls=TextPresets.muted_sm),
             Br(),
             Form(cls='space-y-6')(
@@ -37,22 +43,23 @@ def CreateTaskModal():
                 DivRAligned(
                     ModalCloseButton('Cancel', cls=ButtonT.ghost),
                     ModalCloseButton('Submit', cls=ButtonT.primary),
+                    hx_post="/register",
                     cls='space-x-5'))),
         id='TaskForm')
 
 page_heading = DivFullySpaced(cls='space-y-2')(
-            Div(cls='space-y-2')(
-                H2('Welcome back!'),P("Here's a list of your tasks for this month!", cls=TextPresets.muted_sm)),
-            )
+    Div(cls='space-y-2')(
+        H2('Lista de tareas pendientes!'),P("Aqui tienes una lista con las tareas a realizar!", cls=TextPresets.muted_sm)),
+    )
 
-table_controls =(Input(cls='w-[250px]',placeholder='Filter task'),
-     Button("Status"),
+table_controls =(Input(cls='w-[250px]',placeholder='Filtro Tareas'),
+     Button("Estado"),
      DropDownNavContainer(map(NavCloseLi,[A(DivFullySpaced(P(a['status']), P(a['count'])),cls='capitalize') for a in status_dd])), 
-     Button("Priority"),
+     Button("Prioridad"),
      DropDownNavContainer(map(NavCloseLi,[A(DivFullySpaced(LAlignedCheckTxt(a['priority']), a['count']),cls='capitalize') for a in priority_dd])),
-     Button("View"),
+     Button("Ver"),
      DropDownNavContainer(map(NavCloseLi,[A(LAlignedCheckTxt(o)) for o in ['Title','Status','Priority']])),
-     Button('Create Task',cls=(ButtonT.primary, TextPresets.bold_sm), data_uk_toggle="target: #TaskForm"))
+     Button('Crear',cls=(ButtonT.primary, TextPresets.bold_sm), data_uk_toggle="target: #TaskForm"))
 
 def task_dropdown():
     return Div(Button(UkIcon('ellipsis')),
@@ -90,7 +97,7 @@ tasks_table = Div(cls='mt-4')(
 def footer():
     total_pages = (len(data) + page_size - 1) // page_size
     return DivFullySpaced(
-        Div('1 of 100 row(s) selected.', cls=TextPresets.muted_sm),
+        Div(f'1 of {num_row} row(s) selected.', cls=TextPresets.muted_sm),
         DivLAligned(
             DivCentered(f'Page {current_page + 1} of {total_pages}', cls=TextT.sm),
             DivLAligned(*[UkIconLink(icon=i,  button=True) for i in ('chevrons-left', 'chevron-left', 'chevron-right', 'chevrons-right')])))

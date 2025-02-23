@@ -4,23 +4,22 @@ from fasthtml.common import *
 from monsterui.all import *
 from datetime import datetime
 
-from app.tickets import consultar_tickets, valor_status
 from app.database import  session
-from app.models import new_ticket, update_ticket, delete_ticket
+from app.models import new_task, update_task, delete_task
 from app.lista import page_heading, tasks_ui, CreateTaskModal
 
 hdrs = (Theme.blue.headers())
 app, rt = fast_app(hdrs=hdrs)
 
 @dataclass
-class New_Ticket:
+class New_Task:
+    selected: str
     titulo: str
-    departmento: str
+    estado: str
     prioridad: str
-    descripcion: str
 
 @dataclass
-class Update_Ticket:
+class Update_Task:
     id: str
     titulo: str
     departmento: str
@@ -29,7 +28,7 @@ class Update_Ticket:
     descripcion: str
 
 @dataclass
-class Delete_Ticket:
+class Delete_Task:
     id: str
 
 @rt('/')
@@ -37,26 +36,25 @@ def index():
     return Container(page_heading, tasks_ui, CreateTaskModal())
 
 @rt("/register")
-def post(ticket: New_Ticket):
+def post(ticket: New_Task):
     valores = ticket.__dict__
-    new_ticket(valores)
-    #Toast(DivLAligned(UkIcon('check-circle', cls='mr-2'), "Ticket creado correctamente!"), id="success-toast", alert_cls=AlertT.success, cls=(ToastHT.end, ToastVT.bottom)),
+    new_task(valores)
     return Redirect(f"/")
 
 @rt("/update")
-def post(ticket: Update_Ticket):
+def post(ticket: Update_Task):
     valores = ticket.__dict__
     valores.update(id=int(valores['id'].removeprefix('TK-')))
     valores.update(step=list(valor_status.keys())[list(valor_status.values()).index(valores['step'])])
     valores.update(fechamodificacion=datetime.now())
-    update_ticket(valores)
+    update_task(valores)
     return Redirect(f"/")
 
 @rt("/borrar")
-def post(ticket: Delete_Ticket):
+def post(ticket: Delete_Task):
     valores = ticket.__dict__
     valores.update(id=int(valores['id'].removeprefix('TK-')))
-    delete_ticket(valores)
+    delete_task(valores)
     return Redirect(f"/")
 
 serve()
