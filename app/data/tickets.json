@@ -1,0 +1,11 @@
+[
+    {"id": "TK-1001", "title": "Cloud Storage Access Error", 
+     "description": "Unable to access cloud storage with persistent authorization errors. Multiple users affected across marketing department.",
+     "status": "high", "step": 4, "department": "IT Support"},
+    {"id": "TK-1002", "title": "Email Integration Issue", 
+     "description": "Exchange server not syncing with mobile devices. Affecting external client communications.",
+     "status": "medium", "step": 1, "department": "IT Support"},
+    {"id": "TK-1003", "title": "Office Equipment Setup", 
+     "description": "New department printer needs configuration and network integration. Required for upcoming client presentation.",
+     "status": "low", "step": 0, "department": "Facilities"}
+]

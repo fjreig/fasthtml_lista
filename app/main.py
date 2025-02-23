@@ -7,6 +7,7 @@ from datetime import datetime
 from app.tickets import consultar_tickets, valor_status
 from app.database import  session
 from app.models import new_ticket, update_ticket, delete_ticket
+from app.lista import page_heading, tasks_ui, CreateTaskModal
 
 hdrs = (Theme.blue.headers())
 app, rt = fast_app(hdrs=hdrs)
@@ -33,7 +34,7 @@ class Delete_Ticket:
 
 @rt('/')
 def index():
-    return consultar_tickets()
+    return Container(page_heading, tasks_ui, CreateTaskModal())
 
 @rt("/register")
 def post(ticket: New_Ticket):
